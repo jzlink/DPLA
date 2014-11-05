@@ -1,0 +1,27 @@
+# attributes needed to develop sorted lists of DPLA fields. 
+# Called by sort function, refers to fiels.yml
+#attributes:
+#          key_list:     list of keys to sort, either general_keys or SR_keys
+#          fields_list:  list from fields.yml to compare keys to
+#          present_list: name of list for present fields
+#          missing_list: name of list for missing fiels
+
+#YAML
+
+required_general:
+  key_list: general
+  fields_list: required_general
+  present_list: required_general
+  missing_list: missing_required
+
+required_SR:
+  key_list: SR
+  fields_list: required_SR
+  present_list: required_SR
+  missing_list: missing_SR
+
+recommended:
+  key_list: SR
+  fields_list: recommended
+  present_list: recommended
+  missing_list: missing_recommended

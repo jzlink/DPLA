@@ -1,0 +1,40 @@
+# delimiter: New line, 2 spaces, dash, space. "\n  - example".
+#breakdown of fields recieved as results from the DPLA. Assumed all fields
+# are in the 'docs' sub-dict if results are items.
+# attributes:
+# -type of field  with list of all matching fileds
+# -if dictionary lists sub-fields that must be present for the parent field
+
+#YAML
+DPLA:
+  - aggregatedCHO
+  - id
+  - originalRecord
+
+required_SR:
+  - rights
+  - title
+
+required_general:
+  - dataProvider
+  - isShownAt
+  - object
+  - provider
+
+recommended:
+  - collection 
+  - creator
+  - date
+  - format
+  - language
+  - publisher
+  - spatial
+  - subject
+  - type
+
+conditional_subfields:
+   date: displayDate
+   spatial: name
+   collection:
+     - title
+     - description

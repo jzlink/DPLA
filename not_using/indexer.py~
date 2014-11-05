@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+doc = {'id': '12345', 
+       'SR':{'title': 'The Cat in the Hat', 
+             'collection': {'title': 'kids books', 
+                            'description': 'stuff for kids'},
+             'date':[{'startDate':'',
+                     'endDate':'',
+                     'displayDate': 'Feb 31st'}],
+             'spacial':[{'name':'somewhere'},
+                        {'country': 'USA'},
+                        {'list': [{'thingA': 'A'}]} 
+                    ]
+         }
+   }
+
+
+dotstring = 'SR.spacial.fake.list'
+
+def is_present(dotstring):
+
+    indexList = dotstring.split('.')
+    tempHolder = doc.copy()
+    
+    i=0
+    while i < len(indexList):
+        if type(tempHolder) == dict:
+            tempHolder = tempHolder.get(indexList[i], False)
+        elif type(tempHolder) == list:
+            listCounter = 0
+            for thing in tempHolder:
+                if indexList[i] in thing:
+                    listIndex = tempHolder.index(thing)
+                    tempHolder = tempHolder[listIndex][indexList[i]]
+                    found = True
+                    break
+                else:
+                    listCounter += 1
+
+            if listCounter == len(tempHolder):
+                tempHolder = False
+        else:
+            tempHolder = False
+
+        if tempHolder == False:
+            i = len(indexList)
+
+        i += 1
+
+        return tempHolder
+
+
+if tempHolder == False:
+    print '%s is not found' %dotstring
+else:
+    print '%s is %s' %(dotstring, tempHolder)
