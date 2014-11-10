@@ -96,9 +96,6 @@ sourceResource.rights:
 sourceResource.collection:
    source:
       partner
-   conditional sub-fields:
-     - sourceResource.collection.title
-     - sourceResource.collection.description
    required:
       0
    present:
@@ -109,7 +106,7 @@ sourceResource.date:
    source:
       partner
    conditional sub-fields:
-     - sourceResource.date.displayDate
+      sourceResource.date.displayDate
    required:
       0
    present:
@@ -120,7 +117,7 @@ sourceResource.spatial:
    source:
       partner
    conditional sub-fields:
-     - sourceResource.spatial.name
+      sourceResource.spatial.name
    required:
       0
    present:
@@ -185,7 +182,7 @@ sourceResource.date.displayDate:
    source:
       partner
    conditional parent-field:
-      date
+      sourceResource.date
    required:
       1
    present:
@@ -196,7 +193,7 @@ sourceResource.spatial.name:
    source:
       partner
    conditional parent-field:
-      spatial
+      sourceResource.spatial
    required:
       1
    present:
@@ -207,7 +204,7 @@ sourceResource.collection.title:
    source:
       partner
    conditional parent-field:
-      collection
+      sourceResource.collection
    required:
       0
    present:
@@ -218,7 +215,7 @@ sourceResource.collection.description:
    source:
       partner
    conditional parent-field:
-      collection
+      sourceResource.collection
    required:
       0
    present:

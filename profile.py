@@ -20,26 +20,22 @@ class Profile():
         #Digital Libary of Georga collection key
         DLG_key = 'a72045095d4a687a170a4f300d8e0637'
         self.fields =  yaml.load(open('fields.yml', 'r'))
-        self.DPLAData = dpla_fetch(api_key, 1, q= 'bicycle')
+        self.fieldStat = yaml.load(open('fieldStatus.yml', 'r'))
+        self.DPLAData = dpla_fetch(api_key, 10, q= 'bicycle')
         self.validator = Validator()
 
     def createProfile(self):
         '''responsible for calling helper classes/methods and aggregating
         results. Returns a dictionary of CHO id's and their statuses
         '''
-        #initialize collection dictionary, add DPLAfails to it. 
-        # default DPLAfails to 0
-        collection = {}
-        collection['DPLAfails'] = 0
-        #initialize dict to hold the items of a cho and their calculated grade
-        CHO_items = {} 
+        #initialize dict to hold each document in a collection, 
+        # its field's statuses and grade  
+        collection = {} 
 
         for CHO in self.DPLAData:
-            DPLAfails = False
-            # initialize dict to hold fields and their statuses
-            field_list = {}
+            fieldMetadata = self.fields.copy()
 
-            for field in self.fields:
+            for field in fieldMetadata:
                 #call the finder method
                 fieldValue = find(field,CHO)
 
@@ -47,45 +43,128 @@ class Profile():
                 # set present status to true and 
                 # send the item to the validator set status accordingly
                 if fieldValue != False:
-                    self.fields[field]['present'] = True
+                    fieldMetadata[field]['present'] = True
                     fieldValid = self.validator.validate(fieldValue)
                     if fieldValid:
-                        self.fields[field]['valid'] = True
+                        fieldMetadata[field]['valid'] = True
                     else:
-                        self.fields[field]['valid'] = False
+                        fieldMetadata[field]['valid'] = False
                 
                 # if the finder returned false set present and valid statuses
                 else:
-                    self.fields[field]['present'] = False
-                    self.fields[field]['valid'] = False
+                    fieldMetadata[field]['present'] = False
+                    fieldMetadata[field]['valid'] = False
 
-                #if any of the DPLA required fields are missing 
-                #set DPLAfails to True
-                if self.fields[field]['source'] == 'DPLA' and \
-                   self.fields[field]['present'] == False:
-                    DPLAfails = True
-                    
-                #append field and field status to field_list dict
-                field_list[field] = self.fields[field]
+            #send field metadata to field status assigner
+            fieldMetadata = self.assign_field_status(fieldMetadata) 
 
-            #increment DPLAfails if necessary
-            if DPLAfails:
-                collection['DPLAfails'] = collection['DPLAfails'] + 1
+            #check if the DPLA has ever Failed
+            DPLAFails = 0
+            if fieldMetadata[field]['source'] == 'DPLA' and\
+                          fieldMetadata[field]['stauts'] != 2:
+                DPLAFails += 1
 
             #otherwise add field and statuses to CHO_items
             else:
-                CHO_items[CHO['id']] = field_list
+                collection[CHO['id']] = fieldMetadata
                 
-        return CHO_items
+            collection['DPLAFails'] = DPLAFails
+
+        return collection
+
+    def assign_field_status(self, fieldMetadata):
+        for field in fieldMetadata:
+            status = 00
+            #divide fields into present and missing
+            if fieldMetadata[field]['present'] == True:
+                status = 2
+            else:
+                status = 1
+
+            #check if a present field is valid or invalid
+            if status == 2 and fieldMetadata[field]['valid'] == False:
+                status = 3
+ 
+            #check if a present field has conditional sub-fields
+            if status == 2 and \
+                           'conditional sub-fields' in fieldMetadata[field]:
+                subField = fieldMetadata[field]['conditional sub-fields']
+                #adjust status if sub-field missing or invalid
+                if fieldMetadata[subField]['present'] == False:
+                    status = 5
+                if fieldMetadata[subField]['present'] == True and\
+                   fieldMetadata[subField]['valid'] == False:
+                    status = 6
+            
+            #check if a field is missing because its parent field is missing
+            if status == 1 and\
+                           'conditional parent-field' in fieldMetadata[field]:
+                parent = fieldMetadata[field]['conditional parent-field']
+                if fieldMetadata[parent]['present'] == False:
+                    status = 4
+            
+            #set field status
+            fieldMetadata[field]['status'] = status
+
+        return fieldMetadata
+
+    def assign_CHO_grade(self, fieldMetadata):
+        field_num = len(fieldMetadata)
+        valid_field_num = 0
+        statuses = []
+        grade = 99
+        for field in fieldMetadata:
+            if fieldMetadata[field]['source'] == 'DPLA' and\
+               fieldMetadata[field]['status'] !=2:
+                field_num = field_num -1
+            
+            if fieldMetadata[field]['required'] == 1 and \
+               fieldMetadata[field]['status'] !=2:
+                grade = 0
+            
+            else:
+                statuses.append(fieldMetadata[field]['status'])
+                
+            for number in statuses:
+                if number == 2:
+                    valid_field_num +=1
+
+            grade = float((valid_field_num)/(field_num))
+
+        return grade
+                
 
 def test():
     test = Profile()
-#    print test.DPLAData
     profile = test.createProfile()
-#    pprint.pprint(test.fields)
+#    pprint.pprint(profile)
+    print len(profile)
+    print len(test.fields)
+    for idnum in profile:
+        if idnum != 'DPLAFails':
+            print test.assign_CHO_grade(profile[idnum])
+            for field in profile[idnum]:
+                print profile[idnum][field]['status']
 
-#    pprint.pprint(test.DPLAData)
-    pprint.pprint(profile)
+
 
 if __name__ == '__main__':
     test()
+
+
+#
+#
+#    fieldMD = test.fields
+#    fieldstat = test.assign_field_status(fieldMD)
+#    print test.DPLAData
+#    pprint.pprint(test.fields)
+#    pprint.pprint(test.DPLAData)
+#    pprint.pprint(fieldstat)
+#    for idnum in profile:
+#        if idnum !='DPLAFails':
+#            for field in profile[idnum]:
+#                if profile[idnum][field]['source'] == 'DPLA':
+#                    print 'DPLA'
+#                    print profile[idnum][field]['present']
+#                    print profile[idnum][field]['valid']
+#                    print profile[idnum][field]['status']
