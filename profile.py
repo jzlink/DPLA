@@ -7,6 +7,7 @@ import string
 
 from dpla_utils import * 
 from Validator import *
+from findDotString import find
 
 class Profile(): 
     '''responsible for developing a profile for a given set of DPLA results. 
@@ -40,7 +41,7 @@ class Profile():
 
             for field in self.fields:
                 #call the finder method
-                fieldValue = self.find(field,CHO)
+                fieldValue = find(field,CHO)
 
                 #if the finder does not return false (it found something)
                 # set present status to true and 
@@ -77,71 +78,14 @@ class Profile():
                 
         return CHO_items
 
-    def find(self, dotstring, CHO):
-        '''accepts a json format dot string (eg:
-        sourceResource.collection.title) and makes an index out of it. 
-        Returns the value of the field if found and False if not.
-        '''
-        #parse dot string on '.' 
-        # returns a list of fields eg: [sourceResource, collection, title]
-        #these are treated as successive keys below
-        indexList = dotstring.split('.')
-
-        #initialize a temporary container to the CHO record. It will change
-        tempHolder = CHO.copy()
-    
-        counter=0
-        while counter < len(indexList):
-            #if the tempHolder is a dict re-set the tempHolder to the
-            # value of the next key in the indexList
-            # if that key is not found return false
-            if type(tempHolder) == dict:
-                tempHolder = tempHolder.get(indexList[counter], False)
-            
-            #if the tempHolder is a list search each list item for the next
-            # key in the indexList if it is found set tempHolder to the 
-            # value found at that key
-            # otherwise increment the 
-            elif type(tempHolder) == list:
-                notFoundCounter = 0
-                for thing in tempHolder:
-                    if indexList[counter] in thing:
-                        listIndex = tempHolder.index(thing)
-                        tempHolder = tempHolder[listIndex][indexList[counter]]
-                        found = True
-                        break
-                    else:
-                        notFoundCounter += 1
-                        
-                #if the end comes and the notFoundCounter is the size of the 
-                # searched list (the field wasnt found in and list element)
-                # set tempHolder to False
-                if notFoundCounter == len(tempHolder):
-                    tempHolder = False
-                    
-            # if the tempHolder is not a dict or list before the counter runs
-            # out set it to false
-            else:
-                tempHolder = False
-
-            #if at any point above the tempHolder has returned False
-            # automatically push the counter to its limit 
-            # (break the while loop)
-            if tempHolder == False:
-                counter = len(indexList)
-            
-            counter += 1
-        return tempHolder
-
-
 def test():
     test = Profile()
-    print test.DPLAData
-#    profile = test.createProfile()
+#    print test.DPLAData
+    profile = test.createProfile()
 #    pprint.pprint(test.fields)
 
 #    pprint.pprint(test.DPLAData)
-#    pprint.pprint(profile)
+    pprint.pprint(profile)
 
 if __name__ == '__main__':
     test()
