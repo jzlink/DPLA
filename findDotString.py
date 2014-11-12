@@ -7,7 +7,7 @@ def find(dotstring, dictionary):
     Returns the value of the field if found in the dict and False if not.
     '''
     #parse dot string on '.' 
-    # returns a list of fields eg: [sourceResource, collection, titl]
+    # returns a list of fields eg: [sourceResource, collection, title]
     #these are treated as successive keys below
     indexList = dotstring.split('.')
 

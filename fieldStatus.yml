@@ -3,8 +3,10 @@
 #YAML
 
 1: missing
-2: present and valid
-3: present and invalid
-4: sub-field whose parent field in missing
-5: parent field missing required sub-field
-6: parent field with a present but invalid required sub-field
+2: present and alphanumeric
+3: present and empty
+4: present and non alphanumeric
+5: required sub-field whose parent field is missing
+6: parent field missing required sub-field
+7: parent field with an empty required sub-field
+8: parent field with a required non-alpahnumeric sub-field
