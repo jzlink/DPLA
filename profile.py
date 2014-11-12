@@ -44,16 +44,22 @@ class Profile():
                 # send the item to the validator set status accordingly
                 if fieldValue != False:
                     fieldMetadata[field]['present'] = True
-                    fieldValid = self.validator.validate(fieldValue)
-                    if fieldValid:
-                        fieldMetadata[field]['valid'] = True
-                    else:
-                        fieldMetadata[field]['valid'] = False
-                
+                    if len(fieldValue) > 0:
+                        fieldMetadata[field]['empty'] = False
+                        fieldValid = self.validator.validate(fieldValue)
+                        if fieldValid:
+                            fieldMetadata[field]['valid'] = True
+                        else:
+                            fieldMetadata[field]['valid'] = False
+                    else: 
+                        fieldMetadata[field]['empty'] = True    
+                        fieldMetadata[field]['alphanumeric'] = False
+                    
                 # if the finder returned false set present and valid statuses
                 else:
                     fieldMetadata[field]['present'] = False
-                    fieldMetadata[field]['valid'] = False
+                    fieldMetadata[field]['empty'] = True                    
+                    fieldMetadata[field]['alphanumeric'] = False
 
             #send field metadata to field status assigner
             fieldMetadata = self.assign_field_status(fieldMetadata) 
@@ -82,7 +88,7 @@ class Profile():
                 status = 1
 
             #check if a present field is valid or invalid
-            if status == 2 and fieldMetadata[field]['valid'] == False:
+            if status == 2 and fieldMetadata[field]['alphanumeric'] == False:
                 status = 3
  
             #check if a present field has conditional sub-fields
@@ -93,7 +99,7 @@ class Profile():
                 if fieldMetadata[subField]['present'] == False:
                     status = 5
                 if fieldMetadata[subField]['present'] == True and\
-                   fieldMetadata[subField]['valid'] == False:
+                   fieldMetadata[subField]['alphanumeric'] == False:
                     status = 6
             
             #check if a field is missing because its parent field is missing
@@ -137,14 +143,14 @@ class Profile():
 def test():
     test = Profile()
     profile = test.createProfile()
-#    pprint.pprint(profile)
-    print len(profile)
-    print len(test.fields)
-    for idnum in profile:
-        if idnum != 'DPLAFails':
-            print test.assign_CHO_grade(profile[idnum])
-            for field in profile[idnum]:
-                print profile[idnum][field]['status']
+    pprint.pprint(profile)
+#    print len(profile)
+#    print len(test.fields)
+#    for idnum in profile:
+#        if idnum != 'DPLAFails':
+#            print test.assign_CHO_grade(profile[idnum])
+#            for field in profile[idnum]:
+#                print profile[idnum][field]['status']
 
 
 
@@ -166,5 +172,5 @@ if __name__ == '__main__':
 #                if profile[idnum][field]['source'] == 'DPLA':
 #                    print 'DPLA'
 #                    print profile[idnum][field]['present']
-#                    print profile[idnum][field]['valid']
+#                    print profile[idnum][field]['alphanumeric']
 #                    print profile[idnum][field]['status']
