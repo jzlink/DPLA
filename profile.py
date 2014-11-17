@@ -21,7 +21,7 @@ class Profile():
         DLG_key = 'a72045095d4a687a170a4f300d8e0637'
         self.fields =  yaml.load(open('fields.yml', 'r'))
         self.fieldStat = yaml.load(open('fieldStatus.yml', 'r'))
-        self.DPLAData = dpla_fetch(api_key, 10, q= 'bicycle')
+        self.DPLAData = dpla_fetch(api_key, 1, q= 'bicycle')
         self.validator = Validator()
 
     def createProfile(self):
@@ -143,7 +143,8 @@ class Profile():
 def test():
     test = Profile()
     profile = test.createProfile()
-    pprint.pprint(profile)
+    pprint.pprint(test.DPLAData)
+#    pprint.pprint(profile)
 #    print len(profile)
 #    print len(test.fields)
 #    for idnum in profile:
