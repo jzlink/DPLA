@@ -8,8 +8,8 @@ def createTestCollection():
          u'id':'1-DPLA Fails- fields absent',
          u'isShownAt':'a',
          u'object':'a' ,
-         u'originalRecord': {1:'annoying nested dict'},
-         u'provider': {1:2, 2:3, 3:4},
+         u'originalRecord': {'1':'annoying nested dict'},
+         u'provider': {'1':'2', '2':'3', '3':'4'},
          u'sourceResource': {u'collection':{u'@id': u'http://dp.lapi/collect',
                                             u'description': u'about a bike',
                                             u'id': u'3cbf478cc2d9d448daa7ca42',
@@ -46,7 +46,7 @@ def createTestCollection():
                             u'id': u'urn:brevard.lib.unc.eduececu.edu/6570',
                             u'provider': {u'@id': u'http://dp.la/api/digitc',
                                           u'name': u'North CarolinHeritater'}},
-         u'provider': {'a':[1, 2, 84, 99, 100]},
+         u'provider': {'a':['1', '2', '84', '99', '100']},
          u'sourceResource': {u'collection': {u'@id': u'http://dp.la/i/collect',
                                              u'description': u'about a bike',
                                              u'id': u'3cbf478d9d448daa7c73a42',
@@ -83,7 +83,7 @@ def createTestCollection():
                             u'id': u'urn:brevard.lib.unc.eduecuecu.edu/6570',
                             u'provider': {u'@id': u'http://dp.la/aigitalnc',
                                           u'name': u'North CarolinHe Center'}},
-         u'provider': {1:'foo', 2:'bar', 3:'silly walk'},
+         u'provider': {'1':'foo', '2':'bar', '3':'silly walk'},
          u'sourceResource': {u'collection': {u'@id': u'http://dp.la/apollect',
                                              u'description': u'about a bike',
                                              u'id': u'3cbf478cc2d9d447c73a42',
@@ -135,7 +135,7 @@ def createTestCollection():
                           u'laguage': [{u'iso639_3': u'eng',
                                         u'name': u'English'}],
                           u'rghts': u'Copyright held by Joyner Library.',
-                          u'satial': [{u'name': u'United States--North'}],
+                          u'sptial': [{u'name': u'United States--North'}],
                           u'sateLocatedIn': [{u'name': u'North Carolina'}],
                           u'sbject': [{u'name': u'Children--Greenville'},
                                       {u'name': u'Bicycles--Greenville'},
@@ -143,14 +143,14 @@ def createTestCollection():
                           u'title': [u'Bicycle'],
                           u'tye': u'image'}}
         ,
-        {u'aggregatedCHO':'dfghj',
+        {u'aggregatedCHO':'',
          u'dataProvider':'',
          u'id':'5-All fields present but empty',
          u'isShownAt':'',
          u'object':'' ,
-         u'originalRecord':'sdfgh',
-         u'provider': '',
-         u'sourceResource': {u'collection':'',
+         u'originalRecord':[],
+         u'provider': [],
+         u'sourceResource': {u'collection':{'':[]},
                              u'creator': '',
                              u'date': {u'displayDate': u''},
                              u'description': '',
@@ -198,7 +198,7 @@ def createTestCollection():
                              u'title': [u'Bicycle'],
                              u'type': u'^&*('}}
         ,
-        {u'aggregatedCHO':[1,2,3],
+        {u'aggregatedCHO':['1','2','3'],
          u'dataProvider':'fghj',
          u'id':'7-all fields present exept for title',
          u'isShownAt':'dfghjk',
@@ -240,7 +240,7 @@ def createTestCollection():
                              u'id': u'urn:brevard.lib.unc.eduecu_cdu/6570',
                              u'provider': {u'@id': u'http://dp.api/digitalnc',
                                            u'name': u'North Carotage Center'}},
-         u'provider': {1:3},
+         u'provider': {'1':'3'},
          u'sourceResource': {u'collection': {u'@id': u'http://dp.la/api/clect',
                                              u'description': u'about a bike',
                                              u'id': u'3cbf4789d448daa7c73a42',
@@ -277,7 +277,7 @@ def createTestCollection():
                              u'id': u'urn:brevard.lib.unc.eduecu_cu.edu/6570',
                              u'provider': {u'@id': u'http://dp.la/apiitalnc',
                                            u'name': u'North CarolinHeenter'}},
-         u'provider': {3:'bark'},
+         u'provider': {'3':'bark'},
          u'sourceResource': {u'collection': {u'@id': u'http://dp.la/api/clect',
                                              u'description': u'about a bike',
                                              u'id': u'3cbf478d448daa7c73a42',
@@ -374,10 +374,4 @@ def createTestCollection():
 
     return testCollection
     
-
-testCollection = createTestCollection()
-pprint.pprint(testCollection)
-
-for item in testCollection:
-    print item['id']
 

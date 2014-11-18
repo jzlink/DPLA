@@ -4,10 +4,12 @@ import yaml
 import pprint
 import collections #use collections.counter(list) for aggregating/counting
 import string
+import copy
 
 from dpla_utils import * 
-from Validator import *
+from isAlphaNum import *
 from findDotString import find
+from testCollection import createTestCollection
 
 class Profile(): 
     '''responsible for developing a profile for a given set of DPLA results. 
@@ -21,8 +23,9 @@ class Profile():
         DLG_key = 'a72045095d4a687a170a4f300d8e0637'
         self.fields =  yaml.load(open('fields.yml', 'r'))
         self.fieldStat = yaml.load(open('fieldStatus.yml', 'r'))
-        self.DPLAData = dpla_fetch(api_key, 1, q= 'bicycle')
-        self.validator = Validator()
+        self.DPLAData = createTestCollection()
+#        self.DPLAData = dpla_fetch(api_key, 1, q= 'bicycle')
+        self.isAlphaNum = IsAlphaNum()
 
     def createProfile(self):
         '''responsible for calling helper classes/methods and aggregating
@@ -30,53 +33,43 @@ class Profile():
         '''
         #initialize dict to hold each document in a collection, 
         # its field's statuses and grade  
-        collection = {} 
+        collection = {}
 
         for CHO in self.DPLAData:
-            fieldMetadata = self.fields.copy()
+            itemMetadata= self.findVerify(CHO)
 
-            for field in fieldMetadata:
-                #call the finder method
-                fieldValue = find(field,CHO)
+            collection.update(itemMetadata)
 
-                #if the finder does not return false (it found something)
-                # set present status to true and 
-                # send the item to the validator set status accordingly
-                if fieldValue != False:
-                    fieldMetadata[field]['present'] = True
-                    if len(fieldValue) > 0:
-                        fieldMetadata[field]['empty'] = False
-                        fieldValid = self.validator.validate(fieldValue)
-                        if fieldValid:
-                            fieldMetadata[field]['valid'] = True
-                        else:
-                            fieldMetadata[field]['valid'] = False
-                    else: 
-                        fieldMetadata[field]['empty'] = True    
-                        fieldMetadata[field]['alphanumeric'] = False
-                    
-                # if the finder returned false set present and valid statuses
-                else:
-                    fieldMetadata[field]['present'] = False
-                    fieldMetadata[field]['empty'] = True                    
-                    fieldMetadata[field]['alphanumeric'] = False
-
-            #send field metadata to field status assigner
-            fieldMetadata = self.assign_field_status(fieldMetadata) 
-
-            #check if the DPLA has ever Failed
-            DPLAFails = 0
-            if fieldMetadata[field]['source'] == 'DPLA' and\
-                          fieldMetadata[field]['stauts'] != 2:
-                DPLAFails += 1
-
-            #otherwise add field and statuses to CHO_items
-            else:
-                collection[CHO['id']] = fieldMetadata
-                
-            collection['DPLAFails'] = DPLAFails
 
         return collection
+
+    def findVerify(self, CHO):
+        itemMeta = {}
+        ID = CHO['id']
+        fieldMetadata =  yaml.load(open('fields.yml', 'r'))
+        for field in fieldMetadata:
+            #call the finder method
+            fieldValue = find(field,CHO)
+
+            if fieldValue == False:
+                fieldMetadata[field]['present'] = False
+
+            else:
+                fieldMetadata[field]['present'] = True
+                if len(fieldValue) > 0:
+                    fieldMetadata[field]['empty'] = False
+                    alphaNum = self.isAlphaNum.validate(fieldValue)
+                    if alphaNum:
+                        fieldMetadata[field]['alphanumeric'] = True
+                    else:
+                        fieldMetadata[field]['alphanumeric'] = False
+                        
+                else:
+                    fieldMetadata[field]['empty'] = True                    
+                    
+        itemMeta[ID] = fieldMetadata
+
+        return itemMeta
 
     def assign_field_status(self, fieldMetadata):
         for field in fieldMetadata:
@@ -143,15 +136,13 @@ class Profile():
 def test():
     test = Profile()
     profile = test.createProfile()
-    pprint.pprint(test.DPLAData)
+    for item in profile:
+        print item
+        for field in profile[item]:
+            print '%s: Alphanumeric %s' %(field, profile[item][field]['alphanumeric'])
+#    pprint.pprint(test.DPLAData)
 #    pprint.pprint(profile)
-#    print len(profile)
-#    print len(test.fields)
-#    for idnum in profile:
-#        if idnum != 'DPLAFails':
-#            print test.assign_CHO_grade(profile[idnum])
-#            for field in profile[idnum]:
-#                print profile[idnum][field]['status']
+
 
 
 
