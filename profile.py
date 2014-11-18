@@ -36,16 +36,15 @@ class Profile():
         collection = {}
 
         for CHO in self.DPLAData:
-            itemMetadata= self.findVerify(CHO)
+            fieldMetadata = self.findVerify(CHO)
+            fieldMetadata = self.assign_field_status(fieldMetadata)
 
-            collection.update(itemMetadata)
-
+            collection[CHO['id']] = fieldMetadata
 
         return collection
 
     def findVerify(self, CHO):
-        itemMeta = {}
-        ID = CHO['id']
+
         fieldMetadata =  yaml.load(open('fields.yml', 'r'))
         for field in fieldMetadata:
             #call the finder method
@@ -67,9 +66,7 @@ class Profile():
                 else:
                     fieldMetadata[field]['empty'] = True                    
                     
-        itemMeta[ID] = fieldMetadata
-
-        return itemMeta
+        return fieldMetadata
 
     def assign_field_status(self, fieldMetadata):
         for field in fieldMetadata:
@@ -80,89 +77,50 @@ class Profile():
             else:
                 status = 1
 
-            #check if a present field is valid or invalid
-            if status == 2 and fieldMetadata[field]['alphanumeric'] == False:
-                status = 3
- 
-            #check if a present field has conditional sub-fields
-            if status == 2 and \
-                           'conditional sub-fields' in fieldMetadata[field]:
-                subField = fieldMetadata[field]['conditional sub-fields']
-                #adjust status if sub-field missing or invalid
-                if fieldMetadata[subField]['present'] == False:
-                    status = 5
-                if fieldMetadata[subField]['present'] == True and\
-                   fieldMetadata[subField]['alphanumeric'] == False:
-                    status = 6
-            
-            #check if a field is missing because its parent field is missing
-            if status == 1 and\
-                           'conditional parent-field' in fieldMetadata[field]:
-                parent = fieldMetadata[field]['conditional parent-field']
+            if status == 1 and \
+               'conditional parent field' in fieldMetadata[field]:
+                parent = fieldMetadata[field]['conditional parent field']
                 if fieldMetadata[parent]['present'] == False:
-                    status = 4
-            
+                    status = 5
+
+            if status == 2 and fieldMetadata[field]['empty'] == True:
+                status = 3
+
+            if status == 2 and fieldMetadata[field]['alphanumeric'] == False:
+                status = 4
+
+            if status != 1 and\
+               'conditional sub-field' in fieldMetadata[field]:
+                child = fieldMetadata[field]['conditional sub-field']
+
+                if fieldMetadata[child]['present'] == False:
+                    status = 6
+                if fieldMetadata[child]['empty']== True:
+                    status = 7
+                if fieldMetadata[child]['alphanumeric'] == False:
+                    status = 8
+
             #set field status
             fieldMetadata[field]['status'] = status
 
         return fieldMetadata
 
-    def assign_CHO_grade(self, fieldMetadata):
-        field_num = len(fieldMetadata)
-        valid_field_num = 0
-        statuses = []
-        grade = 99
-        for field in fieldMetadata:
-            if fieldMetadata[field]['source'] == 'DPLA' and\
-               fieldMetadata[field]['status'] !=2:
-                field_num = field_num -1
-            
-            if fieldMetadata[field]['required'] == 1 and \
-               fieldMetadata[field]['status'] !=2:
-                grade = 0
-            
-            else:
-                statuses.append(fieldMetadata[field]['status'])
-                
-            for number in statuses:
-                if number == 2:
-                    valid_field_num +=1
-
-            grade = float((valid_field_num)/(field_num))
-
-        return grade
-                
-
+   
 def test():
     test = Profile()
     profile = test.createProfile()
-    for item in profile:
-        print item
-        for field in profile[item]:
-            print '%s: Alphanumeric %s' %(field, profile[item][field]['alphanumeric'])
 #    pprint.pprint(test.DPLAData)
-#    pprint.pprint(profile)
-
-
-
+    pprint.pprint(profile)
 
 if __name__ == '__main__':
     test()
 
 
-#
-#
-#    fieldMD = test.fields
-#    fieldstat = test.assign_field_status(fieldMD)
-#    print test.DPLAData
-#    pprint.pprint(test.fields)
-#    pprint.pprint(test.DPLAData)
-#    pprint.pprint(fieldstat)
-#    for idnum in profile:
-#        if idnum !='DPLAFails':
-#            for field in profile[idnum]:
-#                if profile[idnum][field]['source'] == 'DPLA':
-#                    print 'DPLA'
-#                    print profile[idnum][field]['present']
-#                    print profile[idnum][field]['alphanumeric']
-#                    print profile[idnum][field]['status']
+
+#    for item in profile:
+#        print item
+#        for field in profile[item]:
+#            print '%s: Present  %s Status %s' %(field, profile[item][field]['present'], profile[item][field]['status'])
+
+
+

@@ -3,7 +3,7 @@
 #attributes:
 #source               : DPLA or Provider
 #conditional sub-field: list of conditional sub fields, if any
-#contitional parent-field: parent field if field is a conditional sub-field
+#conditional parent-field: parent field if field is a conditional sub-field
 #required             : 1/0 indicator of status 1 = required 0 = recommended
 #present              : True/False if the field is present in the record
 #alphanumeric                : True/False if field is alphanumeric by our standards
@@ -115,7 +115,7 @@ sourceResource.collection:
 sourceResource.date:
    source:
       partner
-   conditional sub-fields:
+   conditional sub-field:
       sourceResource.date.displayDate
    required:
       0
@@ -127,7 +127,7 @@ sourceResource.date:
 sourceResource.spatial:
    source:
       partner
-   conditional sub-fields:
+   conditional sub-field:
       sourceResource.spatial.name
    required:
       0
@@ -199,7 +199,7 @@ sourceResource.type:
 sourceResource.date.displayDate:
    source:
       partner
-   conditional parent-field:
+   conditional parent field:
       sourceResource.date
    required:
       1
@@ -211,7 +211,7 @@ sourceResource.date.displayDate:
 sourceResource.spatial.name:
    source:
       partner
-   conditional parent-field:
+   conditional parent field:
       sourceResource.spatial
    required:
       1
@@ -223,7 +223,7 @@ sourceResource.spatial.name:
 sourceResource.collection.title:
    source:
       partner
-   conditional parent-field:
+   conditional parent field:
       sourceResource.collection
    required:
       0
@@ -235,7 +235,7 @@ sourceResource.collection.title:
 sourceResource.collection.description:
    source:
       partner
-   conditional parent-field:
+   conditional parent field:
       sourceResource.collection
    required:
       0
