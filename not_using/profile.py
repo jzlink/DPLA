@@ -5,7 +5,6 @@ import pprint
 import collections #use collections.counter(list) for aggregating/counting
 import string
 import copy
-import json
 
 from dpla_utils import * 
 from isAlphaNum import *
@@ -24,12 +23,9 @@ class Profile():
         DLG_key = 'a72045095d4a687a170a4f300d8e0637'
         self.fields =  yaml.load(open('fields.yml', 'r'))
         self.fieldStat = yaml.load(open('fieldStatus.yml', 'r'))
-        self.DPLAData = createTestCollection()
-#        self.DPLAData = dpla_fetch(api_key, 2, q= 'bicycle')
+#        self.DPLAData = createTestCollection()
+        self.DPLAData = dpla_fetch(api_key, 100, q= 'bicycle')
         self.isAlphaNum = IsAlphaNum()
-        self.collectionFields = {}
-        for field in self.fields:
-            self.collectionFields[field] = []
 
     def createProfile(self):
         '''responsible for calling helper classes/methods and aggregating
@@ -38,38 +34,39 @@ class Profile():
         #initialize dict to hold each document in a collection, 
         # its field's statuses and grade  
         collection = {}
-        items = {}
 
         for CHO in self.DPLAData:
-            fieldMetadata =  yaml.load(open('fields.yml', 'r'))
-            for field in fieldMetadata:
-                #call the finder method
-                fieldValue = find(field,CHO)
-            
-                if fieldValue == False:
-                    fieldMetadata[field]['present'] = False
-
-                else:
-                    fieldMetadata[field]['present'] = True
-                    if len(fieldValue) > 0:
-                        fieldMetadata[field]['empty'] = False
-                        alphaNum = self.isAlphaNum.validate(fieldValue)
-                        if alphaNum:
-                            fieldMetadata[field]['alphanumeric'] = True
-                        else:
-                            fieldMetadata[field]['alphanumeric'] = False
-                        
-                    else:
-                        fieldMetadata[field]['empty'] = True                                
+            fieldMetadata = self.findVerify(CHO)
             fieldMetadata = self.assign_field_status(fieldMetadata)
 
-            items[CHO['id']] = fieldMetadata
-            
-        aggFields = self.aggregate_fields(self.collectionFields)
-        collection['items'] = items
-        collection['aggregated field counts'] = aggFields 
-        collection = json.dumps(collection)
+            collection[CHO['id']] = fieldMetadata
+
         return collection
+
+    def findVerify(self, CHO):
+
+        fieldMetadata =  yaml.load(open('fields.yml', 'r'))
+        for field in fieldMetadata:
+            #call the finder method
+            fieldValue = find(field,CHO)
+
+            if fieldValue == False:
+                fieldMetadata[field]['present'] = False
+
+            else:
+                fieldMetadata[field]['present'] = True
+                if len(fieldValue) > 0:
+                    fieldMetadata[field]['empty'] = False
+                    alphaNum = self.isAlphaNum.validate(fieldValue)
+                    if alphaNum:
+                        fieldMetadata[field]['alphanumeric'] = True
+                    else:
+                        fieldMetadata[field]['alphanumeric'] = False
+                        
+                else:
+                    fieldMetadata[field]['empty'] = True                    
+                    
+        return fieldMetadata
 
     def assign_field_status(self, fieldMetadata):
         for field in fieldMetadata:
@@ -105,36 +102,15 @@ class Profile():
 
             #set field status
             fieldMetadata[field]['status'] = status
-            self.collectionFields[field].append(status)
 
         return fieldMetadata
 
-    def aggregate_fields(self, fieldDict):
-        aggregatedFieldCounts = {}
-        for field in fieldDict:
-            tallyDict = {}
-            stat_count = collections.Counter(fieldDict[field])
-            for stat in stat_count:
-                status = self.fieldStat[stat]
-                tallyDict[status] = stat_count[stat]
-            aggregatedFieldCounts[field] = tallyDict
-
-        return aggregatedFieldCounts
-
-
-
-
+   
 def test():
     test = Profile()
     profile = test.createProfile()
-    for thing in profile:
-        print thing
-    print profile['aggregated field counts']
-#    agg = test.aggregate_fields(test.collectionFields)
-#    print test.collectionFields
 #    pprint.pprint(test.DPLAData)
-#    pprint.pprint(profile)
-
+    pprint.pprint(profile)
 
 if __name__ == '__main__':
     test()

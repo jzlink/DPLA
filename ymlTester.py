@@ -4,9 +4,5 @@ import pprint
 
 yamlFile = yaml.load(open('fields.yml', 'r'))
 
-#pprint.pprint(yamlFile)
-L =[]
-for item in yamlFile:
-    L.append(item)
+pprint.pprint(yamlFile)
 
-pprint.pprint(sorted(L))

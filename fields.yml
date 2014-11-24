@@ -3,7 +3,7 @@
 #attributes:
 #source               : DPLA or Provider
 #conditional sub-field: list of conditional sub fields, if any
-#conditional parent-field: parent field if field is a conditional sub-field
+#conditional parent field: parent field if field is a conditional sub-field
 #required             : 1/0 indicator of status 1 = required 0 = recommended
 #present              : True/False if the field is present in the record
 #alphanumeric                : True/False if field is alphanumeric by our standards
