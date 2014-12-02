@@ -6,7 +6,7 @@
 2: present and alphanumeric
 3: present and empty
 4: present and non alphanumeric
-5: required sub-field whose parent field is missing
+5: sub-field whose parent field is missing
 6: parent field missing required sub-field
 7: parent field with an empty required sub-field
 8: parent field with a required non-alpahnumeric sub-field

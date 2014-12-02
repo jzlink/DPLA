@@ -1,26 +1,29 @@
 #!/usr/bin/env python
 
 import string
-class IsAlphaNum():
+
+
+class Integrity():
     '''presides over a collection of methods that will validate lists, 
-    dictionaries, or string/unicode items. Valid means containing at least
-    one alphanumeric character. Currently accepted alphanumeric characters are
-    all english characters a-z, capitol letters A-Z and digits 0-9. Special
-    characters, characters with accent marks, and non-english characters are
-    not recognized as valid.
+    dictionaries, or string/unicode items. Valid means containing at
+    least one alphanumeric character. Currently accepted alphanumeric
+    characters are all english characters a-z, capitol letters A-Z and
+    digits 0-9. Special characters, characters with accent marks, and
+    non-english characters are not recognized as valid.
     '''
+
     def __init__(self):
-        #sets variable to hold the set of acceptable valid characters
+        #Sets stringvals to hold the set of acceptable valid characters
         self.stringVals = set(string.letters + string.digits)
 
     def validate(self, mystery_item):
         '''accepts a mystery item (string, list or dict)
         returns true if:
-        a string/unicode as at least one alphanumeric character in it, OR
-        a list has at least one element that has at least one alphanumberic
-        character in it, OR
-        a dictionary has at least one key/value pair where both key and value
-        have at least one alphanumeric character it in
+        a string/unicode as at least one alphanumeric character in it,
+        OR a list has at least one element that has at least one
+        alphanumberic character in it,
+        OR a dictionary has at least one key/value pair where both key
+        and value have at least one alphanumeric character it in
         else returns false
         '''
         valid = False
@@ -39,12 +42,12 @@ class IsAlphaNum():
         
     def validate_unicode(self, item):
         '''accept a string or unicode item
-        return true if there is a character in the item that matches the
-        valid string. else return false
+        return true if there is a character in the item that matches
+        the valid string. else return false
         ''' 
         valid = False
-        #find the set of characters that appear in item and stringVals
-        # if there is any return true
+        #Find the set of characters that appear in item and stringVals,
+        # if there is any return true.
         if len(set(item) & self.stringVals) > 0:
             valid = True
 
@@ -55,14 +58,18 @@ class IsAlphaNum():
         returns true if one item in the list is valid
         '''
         valid = False
-        #counter to hold number of things in list that are valid
+
+        #Counter to hold number of things in list that are valid
         valid_items = 0
-        #check if there are any items in the list
+
+        #Check if there are any items in the list
         if len(item) > 0:
-            #send each item to main validate method
+
+            #Send each item to main validate method
             for thing in item:
                 valid_item = self.validate(thing)
-                #cound valid items
+
+                #Count valid items
                 if valid_item:
                     valid_items =+1
 
@@ -74,22 +81,28 @@ class IsAlphaNum():
     def validate_dict(self, item):
         '''accepts a dictionary
         returns true if there is at least one key/value pair such that
-        the key is a vlaid string and the vlaue is a vlaid anything else
+        the key is a vlaid string and the vlaue is vlaid anything else
         '''
         valid = False
-        #counter to hold number of things in dict that are valid
+
+        #Counter to hold number of things in dict that are valid
         valid_items = 0
-        #make sure there are items in the dict
+
+        #Make sure there are items in the dict
         if len(item) > 0:
-            #for each thing vlaidate the key
+
+            #For each thing vlaidate the key
             for thing in item:
                 valid_key = self.validate(thing)
-                #if the key is valid send the value to the main method
+
+                #If the key is valid send the value to the main method
                 if valid_key:
                     valid_value = self.validate(item[thing])
-                    #increment valid value counter
+
+                    #Increment valid value counter
                     if valid_value:
                         valid_items =+ 1
+
         if valid_items > 0:
             valid = True
         return valid

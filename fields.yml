@@ -6,7 +6,7 @@
 #conditional parent field: parent field if field is a conditional sub-field
 #required             : 1/0 indicator of status 1 = required 0 = recommended
 #present              : True/False if the field is present in the record
-#alphanumeric                : True/False if field is alphanumeric by our standards
+#integrity            : True/False if field is valid by our standards
 #status               : numerical idicator of field status. see 
 #		        fieldStatusCodebook.yml for numerical assignments
 
@@ -19,7 +19,7 @@ aggregatedCHO:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 id:
@@ -29,7 +29,7 @@ id:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 originalRecord:
@@ -39,7 +39,7 @@ originalRecord:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 dataProvider:
@@ -49,7 +49,7 @@ dataProvider:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 isShownAt:
@@ -59,7 +59,7 @@ isShownAt:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 object:
@@ -69,7 +69,7 @@ object:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 provider:
@@ -79,7 +79,7 @@ provider:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.title:
@@ -89,7 +89,7 @@ sourceResource.title:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.rights:
@@ -99,7 +99,7 @@ sourceResource.rights:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.collection:
@@ -109,7 +109,7 @@ sourceResource.collection:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.date:
@@ -121,7 +121,7 @@ sourceResource.date:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.spatial:
@@ -133,7 +133,7 @@ sourceResource.spatial:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.creator:
@@ -143,7 +143,7 @@ sourceResource.creator:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.format:
@@ -153,7 +153,7 @@ sourceResource.format:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.language:
@@ -163,7 +163,7 @@ sourceResource.language:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.publisher:
@@ -173,7 +173,7 @@ sourceResource.publisher:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.subject:
@@ -183,7 +183,7 @@ sourceResource.subject:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.type:
@@ -193,7 +193,7 @@ sourceResource.type:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.date.displayDate:
@@ -205,7 +205,7 @@ sourceResource.date.displayDate:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.spatial.name:
@@ -217,7 +217,7 @@ sourceResource.spatial.name:
       1
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.collection.title:
@@ -229,7 +229,7 @@ sourceResource.collection.title:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:
 
 sourceResource.collection.description:
@@ -241,5 +241,5 @@ sourceResource.collection.description:
       0
    present:
    empty: 
-   alphanumeric:
+   integrity:
    status:

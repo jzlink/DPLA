@@ -4,28 +4,30 @@ def find(dotstring, dictionary):
     '''accepts a json format dot string (eg:
     sourceResource.collection.title) and some dictonary
     and makes an index out of it. 
-    Returns the value of the field if found in the dict and False if not.
+    Returns the value of the field if found in the dict and
+    False if not.
     '''
-    #parse dot string on '.' 
-    # returns a list of fields eg: [sourceResource, collection, title]
-    #these are treated as successive keys below
+    #Parse dot string on '.' 
+    #This returns a list of fields eg: [sourceResource, collection, title]
+    # these are treated as successive keys below.
     indexList = dotstring.split('.')
 
-    #initialize a temporary container to the CHO record. It will change
+    #Initialize a temporary container to the CHO record.
+    #Contents of tempHolder will change
     tempHolder = dictionary.copy()
     
     counter=0
     while counter < len(indexList):
-        #if the tempHolder is a dict re-set the tempHolder to the
-        # value of the next key in the indexList
-        # if that key is not found return false
+        #If the tempHolder is a dict re-set the tempHolder to the
+        # value of the next key in the indexList,
+        # if that key is not found return false.
         if type(tempHolder) == dict:
             tempHolder = tempHolder.get(indexList[counter], False)
             
-        #if the tempHolder is a list search each list item for the next
+        #If the tempHolder is a list search each list item for the next
         # key in the indexList if it is found set tempHolder to the 
-        # value found at that key
-        # otherwise increment the 
+        # value found at that key.
+        #If it is not found increment the not found counter.
         elif type(tempHolder) == list:
             notFoundCounter = 0
             for thing in tempHolder:
@@ -38,19 +40,20 @@ def find(dotstring, dictionary):
                 else:
                     notFoundCounter += 1
                         
-            #if the end comes and the notFoundCounter is the size of the 
-            # searched list (the field wasnt found in and list element)
-            # set tempHolder to False
+            #If the end comes and the notFoundCounter is the size of
+            # the searched list (the field wasnt found in and list
+            # element)set tempHolder to False.
             if notFoundCounter == len(tempHolder):
                 tempHolder = False
-        # if the tempHolder is not a dict or list before the counter runs
-        # out set it to false
+
+        #If the tempHolder is not a dict or list before the counter
+        # runs out set it to false.
         else:
             tempHolder = False
 
-        #if at any point above the tempHolder has returned False
+        #If at any point above the tempHolder has returned False
         # automatically push the counter to its limit 
-        # (break the while loop)
+        # (break the while loop).
         if tempHolder == False:
             counter = len(indexList)
             
