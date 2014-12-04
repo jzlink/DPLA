@@ -14,21 +14,22 @@ from dotstring import find
 from testCollection import createTestCollection
 
 
-class Profile(): 
+class Profile(object): 
     '''responsible for developing a profile for a given set of DPLA
     results. In the future it will take a parameter determining the
     DPLA query currently queries are definded ad hoc in the constructor
     '''
 
-    def __init__(self):
+    def __init__(self, size, api_key='2992771ce4f801b3c6ba94f38366c102',
+                 collection='a72045095d4a687a170a4f300d8e0637'):
         #Julia's API from DPLA
-        api_key = '2992771ce4f801b3c6ba94f38366c102'
+#        api_key =
         #Digital Libary of Georga collection key
-        Col_key = 'a72045095d4a687a170a4f300d8e0637'
+#        Col_key =
         self.fields =  yaml.load(open('fields.yml', 'r'))
         self.fieldStat = yaml.load(open('fieldStatus.yml', 'r'))
-        #self.DPLAData = createTestCollection()
-        self.DPLAData = dpla_fetch(api_key, 5000, q = Col_key)
+#        self.DPLAData = createTestCollection()
+        self.DPLAData = dpla_fetch(api_key, size, q = collection)
         self.integrity = Integrity()
         self.collectionFields = {}
         for field in self.fields:

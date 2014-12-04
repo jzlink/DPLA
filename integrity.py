@@ -66,8 +66,8 @@ class Integrity():
         if len(item) > 0:
 
             #Send each item to main validate method
-            for thing in item:
-                valid_item = self.validate(thing)
+            for element in item:
+                valid_item = self.validate(element)
 
                 #Count valid items
                 if valid_item:
@@ -92,12 +92,12 @@ class Integrity():
         if len(item) > 0:
 
             #For each thing vlaidate the key
-            for thing in item:
-                valid_key = self.validate(thing)
+            for key in item:
+                valid_key = self.validate(key)
 
                 #If the key is valid send the value to the main method
                 if valid_key:
-                    valid_value = self.validate(item[thing])
+                    valid_value = self.validate(item[key])
 
                     #Increment valid value counter
                     if valid_value:
